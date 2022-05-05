@@ -225,6 +225,25 @@ async function documentLibraryJob() {
     return prom;
 }
 
+async function clearHomeProp(file)
+{
+    var prom = new Promise((resolve, reject) => {
+        var content = "";
+        var broadbandLines = new nReadlines(`${file}`);
+        let line;
+        while (line = broadbandLines.next()) {
+            line = line.toString('ascii');
+            if (line.indexOf("liferay.home") > -1) {
+                continue;
+            }
+            content+=line + "\n";
+        }
+        resolve(content);
+    });
+    return prom;
+
+}
+
 async function OSGIModulesJob() {
     console.log(`Exporting OSGI Modules`);
     var prom = new Promise((resolve, reject) => {
@@ -259,11 +278,15 @@ async function PropertiesJob() {
     console.log(`Exporting Properties`);
     if(await fs.pathExists(`${liferayHome}/portal-setup-wizard.properties`))
     {
-        await fs.copySync(`${liferayHome}/portal-setup-wizard.properties`, `${exportFolder}/properties/portal-setup-wizard.properties`);
+        var content = await clearHomeProp(`${liferayHome}/portal-setup-wizard.properties`);
+        //await fs.copySync(`${liferayHome}/portal-setup-wizard.properties`, `${exportFolder}/properties/portal-setup-wizard.properties`);
+        fs.outputFileSync(`${exportFolder}/properties/portal-setup-wizard.properties`,content);
     }
     if(await fs.pathExists(`${liferayHome}/portal-ext.properties`))
     {
-        await fs.copySync(`${liferayHome}/portal-ext.properties`, `${exportFolder}/properties/portal-ext.properties`);
+        var content = await clearHomeProp(`${liferayHome}/portal-ext.properties`);
+        fs.outputFileSync(`${exportFolder}/properties/portal-ext.properties`,content);
+        //await fs.copySync(`${liferayHome}/portal-ext.properties`, `${exportFolder}/properties/portal-ext.properties`);
     }
     console.log(`Exporting Properties completed!`);
 }
