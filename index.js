@@ -4,6 +4,7 @@ const program = require('commander');
 const lrupdate = require('./commands/lrupdate');
 const clearcache = require('./commands/clearcache');
 const backup = require('./commands/dxpbackup/backup');
+const exportlr = require('./commands/exportbundle/export');
 program
     .command('update')
     .alias('u')
@@ -32,6 +33,15 @@ program
     // function to execute when command is uses
     .action(function (clear, args) {
         backup.start(clear.bundle);
+    });
+program
+    .command('export')
+    .alias('e')
+    .description('export liferay 7.4 bundle by dumping the db into sql dump files, and backing up the document library folder and copying the required OSGI Modules and Theme(s) WARs.') // command description
+    .option('-s, --bundle [value]', 'Liferay 7.4 bundle')
+    // function to execute when command is uses
+    .action(function (clear, args) {
+        exportlr.start(clear.bundle);
     });
 // allow commander to parse `process.argv`
 program.parse(process.argv);
