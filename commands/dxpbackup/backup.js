@@ -1,5 +1,5 @@
 const tables = require('./tables.js');
-var mysql = require('mysql');
+var mysql = require('mysql2');
 const nReadlines = require('n-readlines');
 const {createGzip} = require("zlib");
 const {createReadStream, createWriteStream} = require("fs");
@@ -13,7 +13,7 @@ var dbConnectionConfig = {
     port: "3306",
     user: "mahmoud",
     password: "SQLAdmin",
-    database: "lportal"
+    database: "lportal1"
 }
 function getDate()
 {
@@ -32,13 +32,7 @@ function getDate()
 
 }
 const fs = require('fs-extra');
-var con = mysql.createConnection({
-    host: dbConnectionConfig.host,
-    user: dbConnectionConfig.user,
-    password: dbConnectionConfig.password,
-    database: dbConnectionConfig.database,
-    port: dbConnectionConfig.port
-});
+var con = null;
 async function compressFile(filePath) {
     var prom = new Promise(function (resolve, reject) {
         console.log("Compressing mysql dump file...");
@@ -143,6 +137,13 @@ function processBackup()
     prom = new Promise(async function (resolve, reject) {
         console.log("Finding DB Configurations");
         await getLiferayConfigurationData(liferayHome);
+        con = mysql.createConnection({
+            host: dbConnectionConfig.host,
+            user: dbConnectionConfig.user,
+            password: dbConnectionConfig.password,
+            database: dbConnectionConfig.database,
+            port: dbConnectionConfig.port
+        });
         console.log("Starting DB Job...");
         var db_filename = `${timeStamp}__originalDb`;
         var db_fixed_dump = `${timeStamp}__fixedDb`;
@@ -166,7 +167,7 @@ async function start(liferayBundleHome) {
     await processBackup();
     process.exit(1);
 }
-async function getLiferayConfigurationData(home) {
+ async function getLiferayConfigurationData(home) {
     var prom = new Promise(async function (resolve, reject) {
         if (await fs.pathExists(`${home}/portal-setup-wizard.properties`)) {
             var broadbandLines = new nReadlines(`${home}/portal-setup-wizard.properties`);

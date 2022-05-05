@@ -1,4 +1,3 @@
-var mysql = require('mysql');
 const nReadlines = require('n-readlines');
 const {createGzip} = require("zlib");
 const {createReadStream, createWriteStream} = require("fs");
@@ -34,13 +33,6 @@ function getDate() {
 
 const fs = require('fs-extra');
 const {pathExistsSync} = require("fs-extra");
-var con = mysql.createConnection({
-    host: dbConnectionConfig.host,
-    user: dbConnectionConfig.user,
-    password: dbConnectionConfig.password,
-    database: dbConnectionConfig.database,
-    port: dbConnectionConfig.port
-});
 
 async function compressFile(filePath) {
     var prom = new Promise(function (resolve, reject) {
@@ -104,17 +96,6 @@ async function saveFile(filePath, fileData) {
     return prom;
 }
 
-async function sqlCommand(con, command) {
-    return new Promise((resolve, reject) => {
-        con.query(`${command}`, function (error, result, fields) {
-            if (error) {
-                console.log(`error while executing command: ${command}`);
-                reject(error);
-            }
-            resolve(result);
-        });
-    });
-}
 
 function processBackup() {
     prom = new Promise(async function (resolve, reject) {
