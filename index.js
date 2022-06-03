@@ -29,10 +29,11 @@ program
     .command('backup')
     .alias('b')
     .description('Backup liferay 7.4 bundle by dumping the db into sql dump files, fixing the database tables names, and backing up the document library folder, this will allow you to easily migrate dxp to dxpc.') // command description
-    .option('-s, --bundle [value]', 'Liferay 7.4 old bundle')
+    .option('-b, --bundle [value]', 'Liferay 7.4  bundle')
+    .option('-d, --dbName [value]', 'Dump DB in DB with specified name!')
     // function to execute when command is uses
     .action(function (clear, args) {
-        backup.start(clear.bundle);
+        backup.start(clear.bundle,clear.dbName);
     });
 program
     .command('export')

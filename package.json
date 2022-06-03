@@ -1,6 +1,6 @@
 {
   "name": "liferay-commands",
-  "version": "2.0.3",
+  "version": "2.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cli-color": "^2.0.2",
-    "commander": "^9.1.0",
+    "commander": "^9.2.0",
     "fs-extra": "^10.1.0",
     "mysql-backup": "^1.0.0",
     "mysql2": "^2.3.3",

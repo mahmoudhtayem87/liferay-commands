@@ -15,6 +15,9 @@ var dbConnectionConfig = {
     password: "SQLAdmin",
     database: "lportal1"
 }
+
+var createDbIfNotExist = "CREATE DATABASE  IF NOT EXISTS `lportal`; USE  `lportal`;";
+
 function getDate()
 {
     var date_ob = new Date();
@@ -65,13 +68,14 @@ async function mysqlDumpToFile(dumpFile, compress) {
             dump: {
                 schema: {
                     table: {
-                        dropIfExist: true
+                        dropIfExist: true,
+                        charset:"utf8"
                     },
                     schema: true
                 }
             }
         }).then(async result => {
-            saveFile(`${dumpFile}.sql`, `${result.dump.schema}\n${result.dump.data}\n${result.dump.trigger}`).then(async result => {
+            saveFile(`${dumpFile}.sql`, `${createDbIfNotExist}\n${result.dump.schema}\n${result.dump.data}\n${result.dump.trigger}`).then(async result => {
                 console.log(`Dumping ${dumpFile} data! into ${dumpFile}.sql completed!`);
                 if (compress)
                     await compressFile(`${dumpFile}.sql`.toString());
@@ -161,11 +165,13 @@ function processBackup()
     });
     return prom;
 }
-async function start(liferayBundleHome) {
+async function start(liferayBundleHome,dbName) {
+    createDbIfNotExist = `CREATE DATABASE  IF NOT EXISTS \`${dbName}\`; USE  \`${dbName}\`;`
     liferayHome = liferayBundleHome;
     timeStamp  =getDate();
     await processBackup();
     process.exit(1);
+
 }
  async function getLiferayConfigurationData(home) {
     var prom = new Promise(async function (resolve, reject) {
