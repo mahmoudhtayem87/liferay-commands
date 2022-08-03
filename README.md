@@ -8,6 +8,11 @@ Update liferay 7.4 bundle by moving the required modules and files from the old 
 ### liferay-cmd clear-cache --bundle [liferay bundle home]
 Update liferay 7.4 bundle by moving the required modules and files from the old bundle to the new bundle.
 
+## Liferay Export
+### liferay-cmd export --bundle [liferay bundle home]
+Export liferay 7.4 bundle to DB Dump and Documents folder, OSGI Modules, WAR Modules, and properties file.
+
+
 ## Liferay Backup
 ### liferay-cmd backup --bundle [liferay bundle home]
 Backup liferay 7.4 bundle by dumping the db into sql dump files, fixing the database tables names, and backing up the document library folder, this will allow you to easily migrate DXP to DXPC.
